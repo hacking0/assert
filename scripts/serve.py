@@ -12,11 +12,12 @@ from urllib.parse import urlsplit
 from backtest import parse_weights, run_backtest
 from prices import DATABASE_PATH
 
-WEB = Path(__file__).resolve().parent / "web"
+WEB = Path(__file__).resolve().parents[1] / "web"
 STATIC = {
     "/": ("index.html", "text/html"),
     "/style.css": ("style.css", "text/css"),
     "/app.js": ("app.js", "text/javascript"),
+    "/excel.mjs": ("excel.mjs", "text/javascript"),
 }
 
 

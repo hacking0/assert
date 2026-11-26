@@ -14,7 +14,7 @@ from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
-DATABASE_PATH = Path(__file__).resolve().parent / "data" / "prices.sqlite3"
+DATABASE_PATH = Path(__file__).resolve().parents[1] / "data" / "prices.sqlite3"
 OHLC_FIELDS = ("open", "high", "low", "close")
 EASTMONEY_MARKETS = {"SS": "1", "SZ": "0", "BJ": "0"}
 EASTMONEY_LISTING_DATES = {"1.511260": "20170824"}

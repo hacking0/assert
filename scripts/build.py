@@ -5,13 +5,13 @@ import json
 from pathlib import Path
 import sqlite3
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+ROOT = Path(__file__).resolve().parents[1]
+SITE = ROOT / "sites" / "portfolio-backtest"
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=HERE / "dist")
+    parser.add_argument("--output", type=Path, default=SITE / "dist")
     parser.add_argument("--db", type=Path, default=ROOT / "data" / "prices.sqlite3")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -31,10 +31,10 @@ def main():
                           '<script type="module" src="/hosted.mjs"></script>')
     index = index.replace("本地行情库", "历史行情快照")
     (args.output / "index.html").write_text(index)
-    for name in ("app.js", "style.css"):
+    for name in ("app.js", "style.css", "excel.mjs"):
         (args.output / name).write_bytes((ROOT / "web" / name).read_bytes())
     for name in ("engine.mjs", "hosted.mjs"):
-        (args.output / name).write_bytes((HERE / name).read_bytes())
+        (args.output / name).write_bytes((SITE / name).read_bytes())
 
 
 if __name__ == "__main__":

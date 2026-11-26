@@ -251,13 +251,24 @@ byId("add").addEventListener("click", () => {
 });
 byId("prev").addEventListener("click", () => { page--; showDetail(); });
 byId("next").addEventListener("click", () => { page++; showDetail(); });
-byId("export").addEventListener("click", () => {
-  const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type:"application/json"}));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `backtest-${report.summary.start_date}.json`;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+byId("export").addEventListener("click", async () => {
+  const button = byId("export");
+  const current = report;
+  button.disabled = true;
+  error("");
+  try {
+    const {exportWorkbook} = await import("/excel.mjs");
+    const url = URL.createObjectURL(exportWorkbook(current));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `组合回测-${current.summary.start_date}-${current.summary.end_date}.xlsx`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (failure) {
+    error("Excel 导出失败：" + failure.message);
+  } finally {
+    button.disabled = false;
+  }
 });
 bindTabs("chart-tabs", "chart", choice => { metric = choice; drawChart(); });
 bindTabs("detail-tabs", "detail", choice => { tab = choice; page = 0; showDetail(); });
