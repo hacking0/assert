@@ -1,0 +1,7 @@
+__pycache__/
+/data/prices/
+/data/prices.sqlite3
+/data/prices.sqlite3-*
+
+/sites/portfolio-backtest/dist/
+.DS_Store

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>资产配置回测</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>资产配置回测</div><span class="source"><b></b>本地行情库</span></header>
+<main>
+  <div class="intro"><h1>组合回测</h1><p>设置初始配置，对比历史收益、回撤和调仓记录。</p></div>
+  <div class="layout">
+    <form id="config" class="panel controls">
+      <h2>回测参数</h2>
+      <section>
+        <div class="section-head"><h3>资产配置</h3><span id="weight-total"></span></div>
+        <div id="allocation"></div>
+        <button id="add" class="link" type="button">＋ 添加标的</button>
+        <label id="cash-wrap" class="cash-settings" hidden>现金固定年化收益率（%）
+          <input id="cash-return" type="number" min="-99.999999" step="any" value="0" required disabled>
+          <small>按日历天数复利计息</small>
+        </label>
+      </section>
+      <section class="fields">
+        <label>初始金额<input id="amount" type="number" min="0.01" step="0.01" value="10000" required></label>
+        <label>计价口径<select id="price"><option value="adjusted_close">复权收盘价</option><option value="close">收盘价</option></select></label>
+        <label>投入日期<input id="start" type="date" value="2017-08-24" required></label>
+        <label>截止日期<input id="end" type="date" aria-describedby="end-note"><small id="end-note">留空使用共同覆盖的末日</small></label>
+      </section>
+      <section class="strategy">
+        <label>调仓策略<select id="strategy"><option value="hold">买入持有</option><option value="periodic">定期再平衡</option><option value="threshold">阈值再平衡</option></select></label>
+        <label id="check-wrap" hidden>检查频率<select id="check"><option value="daily">每个共同报价日</option><option value="scheduled">自定义周期</option></select></label>
+        <div id="period-wrap" class="fields" hidden>
+          <label>间隔<input id="interval" type="number" min="1" step="1" value="3" required></label>
+          <label>单位<select id="unit"><option value="d">天</option><option value="w">周</option><option value="m" selected>月</option><option value="q">季</option><option value="y">年</option></select></label>
+        </div>
+        <label id="threshold-wrap" hidden>偏离阈值（百分点）<input id="threshold" type="number" min="0.01" max="99.99" step="0.01" value="5" required></label>
+      </section>
+      <button id="run" class="primary" type="submit">运行回测</button>
+      <p id="error" class="error" role="alert" hidden></p>
+    </form>
+    <div class="results">
+      <div class="results-head"><div><h2>回测结果</h2><p id="result-period" aria-live="polite">正在读取行情库…</p></div><button id="export" type="button" disabled>下载 JSON</button></div>
+      <div class="metrics">
+        <div><span>期末市值</span><strong id="value">—</strong></div>
+        <div><span>累计收益率</span><strong id="return">—</strong></div>
+        <div><span>最大回撤</span><strong id="drawdown">—</strong></div>
+        <div><span>调仓次数</span><strong id="count">—</strong></div>
+      </div>
+      <section class="panel chart-panel">
+        <div class="section-head"><h3>组合走势</h3><div class="tabs" id="chart-tabs" aria-label="图表指标"><button data-chart="value" aria-pressed="true">市值</button><button data-chart="drawdown" aria-pressed="false">回撤</button></div></div>
+        <div class="plot"><canvas id="chart" role="img" aria-label="组合市值走势"></canvas></div>
+      </section>
+      <section class="panel detail-panel">
+        <div class="section-head"><h3>回测明细</h3><div class="tabs" id="detail-tabs" aria-label="明细类型"><button data-detail="positions" aria-pressed="true">期末持仓</button><button data-detail="daily" aria-pressed="false">每日估值</button><button data-detail="trades" aria-pressed="false">调仓</button></div></div>
+        <div class="table-scroll"><table id="details"></table><p id="empty" class="empty" hidden></p></div>
+        <div id="pager" class="pager" hidden><button id="prev">上一页</button><span id="page"></span><button id="next">下一页</button></div>
+      </section>
+      <p class="footnote">一次性投入，允许零碎份额，未计交易费用。调仓按收盘口径计算。</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
